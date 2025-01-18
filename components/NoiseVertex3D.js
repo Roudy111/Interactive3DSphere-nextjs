@@ -266,10 +266,10 @@ const NoiseVertex3D = () => {
         canvas.addEventListener('mouseup', handlePointerUp);
         canvas.addEventListener('mouseleave', handlePointerUp);
         
-        canvas.addEventListener('touchmove', handlePointerMove);
-        canvas.addEventListener('touchstart', handlePointerDown);
-        canvas.addEventListener('touchend', handlePointerUp);
-        canvas.addEventListener('touchcancel', handlePointerUp);
+        canvas.addEventListener('touchmove', handlePointerMove, { passive: false });
+        canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+        canvas.addEventListener('touchend', handlePointerUp, { passive: false });
+        canvas.addEventListener('touchcancel', handlePointerUp, { passive: false });
 
         let frame = 0;
         const animate = () => {
