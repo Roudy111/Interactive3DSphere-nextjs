@@ -128,8 +128,6 @@ const NoiseVertex3D = () => {
     const sphereRef = useRef(null);
     const frameIdRef = useRef(null);
     const noiseRef = useRef(new SimplexNoise());
-    
-    const [pointerPos, setPointerPos] = useState({ x: 0, y: 0 });
     const [isPointerDown, setIsPointerDown] = useState(false);
     const lastPointerPosRef = useRef({ x: 0, y: 0 });
     const vertexStatesRef = useRef([]);
@@ -138,10 +136,11 @@ const NoiseVertex3D = () => {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const mount = mountRef.current;
         
         renderer.setSize(400, 400);
         renderer.setClearColor(0x1a1a1a);
-        mountRef.current.appendChild(renderer.domElement);
+        mount.appendChild(renderer.domElement);
 
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshPhongMaterial({
@@ -151,7 +150,6 @@ const NoiseVertex3D = () => {
         });
         const sphere = new THREE.Mesh(geometry, material);
 
-        // Initialize vertex states
         const numVertices = geometry.attributes.position.count;
         vertexStatesRef.current = new Array(numVertices).fill().map(() => ({
             isFrozen: false,
@@ -173,12 +171,10 @@ const NoiseVertex3D = () => {
         rendererRef.current = renderer;
         sphereRef.current = sphere;
 
-        // Unified pointer position calculation
         const getPointerPosition = (event) => {
             const rect = renderer.domElement.getBoundingClientRect();
             let clientX, clientY;
 
-            // Handle both touch and mouse events
             if (event.touches) {
                 clientX = event.touches[0].clientX;
                 clientY = event.touches[0].clientY;
@@ -226,11 +222,9 @@ const NoiseVertex3D = () => {
             }
         };
 
-        // Mouse event handlers
         const handlePointerMove = (event) => {
             event.preventDefault();
             const pointer = getPointerPosition(event);
-            setPointerPos(pointer);
 
             if (isPointerDown) {
                 const deltaX = pointer.x - lastPointerPosRef.current.x;
@@ -255,16 +249,13 @@ const NoiseVertex3D = () => {
             setIsPointerDown(false);
         };
 
-        // Add both mouse and touch event listeners
         const canvas = renderer.domElement;
         
-        // Mouse events
         canvas.addEventListener('mousemove', handlePointerMove);
         canvas.addEventListener('mousedown', handlePointerDown);
         canvas.addEventListener('mouseup', handlePointerUp);
         canvas.addEventListener('mouseleave', handlePointerUp);
         
-        // Touch events
         canvas.addEventListener('touchmove', handlePointerMove, { passive: false });
         canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
         canvas.addEventListener('touchend', handlePointerUp, { passive: false });
@@ -320,7 +311,6 @@ const NoiseVertex3D = () => {
 
         return () => {
             cancelAnimationFrame(frameIdRef.current);
-            // Remove both mouse and touch event listeners
             canvas.removeEventListener('mousemove', handlePointerMove);
             canvas.removeEventListener('mousedown', handlePointerDown);
             canvas.removeEventListener('mouseup', handlePointerUp);
@@ -331,7 +321,9 @@ const NoiseVertex3D = () => {
             canvas.removeEventListener('touchend', handlePointerUp);
             canvas.removeEventListener('touchcancel', handlePointerUp);
             
-            mountRef.current?.removeChild(renderer.domElement);
+            if (mount) {
+                mount.removeChild(renderer.domElement);
+            }
             geometry.dispose();
             material.dispose();
             renderer.dispose();
