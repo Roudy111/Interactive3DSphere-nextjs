@@ -1,5 +1,5 @@
-import ClientPage from '../components/ClientPage'
+import NoiseVertex3DWrapper from '../components/NoiseVertex3DWrapper'
 
 export default function Home() {
-  return <ClientPage />
+  return <NoiseVertex3DWrapper />
 }
