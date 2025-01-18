@@ -1,4 +1,4 @@
-class SimplexNoise {
+export class SimplexNoise {
     constructor(r = Math) {
         this.grad3 = [
             [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
