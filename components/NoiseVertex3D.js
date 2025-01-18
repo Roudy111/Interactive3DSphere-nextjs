@@ -134,13 +134,23 @@ const NoiseVertex3D = () => {
 
     useEffect(() => {
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         const mount = mountRef.current;
         
-        renderer.setSize(400, 400);
+    // Set renderer size to window size
+        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x1a1a1a);
         mount.appendChild(renderer.domElement);
+
+    // Add resize handler
+        const handleResize = () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
 
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshPhongMaterial({
@@ -310,6 +320,8 @@ const NoiseVertex3D = () => {
         animate();
 
         return () => {
+            window.removeEventListener('resize', handleResize);  // Add this line first
+            
             cancelAnimationFrame(frameIdRef.current);
             canvas.removeEventListener('mousemove', handlePointerMove);
             canvas.removeEventListener('mousedown', handlePointerDown);
@@ -331,10 +343,10 @@ const NoiseVertex3D = () => {
     }, [isPointerDown]);
 
     return (
-        <div className="w-full h-full flex items-center justify-center bg-gray-900">
+        <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-gray-900">
             <div 
                 ref={mountRef} 
-                className="border border-gray-700 cursor-move touch-none select-none"
+                className="w-full h-full cursor-move touch-none select-none"
             />
         </div>
     );
