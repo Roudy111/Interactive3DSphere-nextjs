@@ -86,14 +86,14 @@ const NoiseVertex3D = () => {
         };
     }, [isPointerDown]);
 
-    return (
-        <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-gray-900">
-            <div 
-                ref={mountRef} 
-                className="w-full h-full cursor-move touch-none select-none"
-            />
-        </div>
-    );
-};
+return (
+    <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-gray-900">
+        <div 
+            ref={mountRef} 
+            className="w-full h-full touch-none select-none"
+            style={{ width: '100vw', height: '100vh' }}
+        />
+    </div>
+);
 
 export default NoiseVertex3D;
