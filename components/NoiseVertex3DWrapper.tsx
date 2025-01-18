@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const NoiseVertex3D = dynamic(() => import('./NoiseVertex3D'), {
+const NoiseVertex3D = dynamic(() => import('./NoiseVertex3D/index'), {
   ssr: false,
 })
 
