@@ -7,5 +7,9 @@ const NoiseVertex3D = dynamic(() => import('./NoiseVertex3D'), {
 })
 
 export default function NoiseVertex3DWrapper() {
-  return <NoiseVertex3D />
+  return (
+    <div className="fixed inset-0 w-screen h-screen">
+      <NoiseVertex3D />
+    </div>
+  )
 }
