@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SimplexNoise } from './SimplexNoise';
-import { createScene, createSphere, setupLights } from './sceneSetup';
-import { createEventHandlers, createVertexStateUpdater } from './eventHandlers';
-import { createAnimationLoop } from './animation';
+import { SimplexNoise } from './SimplexNoise.js';
+import { createScene, createSphere, setupLights } from './sceneSetup.js';
+import { createEventHandlers, createVertexStateUpdater } from './eventHandlers.js';
+import { createAnimationLoop } from './animation.js';
 
 const NoiseVertex3D = () => {
     // Refs setup
