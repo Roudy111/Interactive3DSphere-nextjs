@@ -5,24 +5,22 @@ const nextConfig = {
   
   // Configure webpack for Three.js
   webpack: (config) => {
-    // Handle Three.js externals
     config.externals = config.externals || {};
     config.externals['canvas'] = 'canvas';
-
-    // Ensure proper handling of glsl/shader files
-    config.module = config.module || {};
-    config.module.rules = config.module.rules || [];
-    config.module.rules.push({
-      test: /\.(glsl|vs|fs|vert|frag)$/,
-      exclude: /node_modules/,
-      use: ['raw-loader'],
-    });
-
     return config;
   },
 
   // Configure transpiler settings
   transpilePackages: ['three'],
+
+  // Disable React StrictMode for Three.js compatibility
+  reactStrictMode: false,
+
+  // Enable TypeScript
+  typescript: {
+    // Don't fail build on type errors during development
+    ignoreBuildErrors: process.env.NODE_ENV === 'development',
+  },
 
   // Configure headers for better security
   async headers() {
@@ -45,15 +43,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-
-  // Disable React StrictMode for Three.js compatibility
-  reactStrictMode: false,
-
-  // Enable TypeScript
-  typescript: {
-    // Don't fail build on type errors during development
-    ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },
 }
 

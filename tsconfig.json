@@ -21,8 +21,7 @@
       {
         "name": "next"
       }
-    ],
-    "types": ["node", "react", "react-dom", "three"]
+    ]
   },
   "include": [
     "next-env.d.ts",
