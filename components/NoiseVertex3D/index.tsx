@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { createScene, createSphere, setupLights, ProjectMesh } from './sceneSetup';
 import { createEventHandlers, createVertexStateUpdater } from './eventHandlers';
-import { createProjectGeometries, setupPostProcessing, handleProjectInteractions, animateProjectSelection } from './projectGeometries';
+import { createProjectGeometries, handleProjectInteractions, animateProjectSelection } from './projectGeometries';
 import SimplexNoise from './SimplexNoise';
 
 interface Props {
@@ -39,9 +39,6 @@ export default function NoiseVertex3D({ className }: Props) {
     // Setup lights
     setupLights(scene);
 
-    // Setup post-processing
-    const composer = setupPostProcessing(scene, camera, renderer);
-
     // Setup raycaster for project interactions
     const raycaster = new THREE.Raycaster();
     let hoveredProject: ProjectMesh | null = null;
@@ -63,7 +60,6 @@ export default function NoiseVertex3D({ className }: Props) {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-      composer.setSize(width, height);
     };
 
     window.addEventListener('resize', handleResize);
@@ -114,8 +110,8 @@ export default function NoiseVertex3D({ className }: Props) {
         hoveredProject = handleProjectInteractions(raycaster, camera, projectGeometries);
       }
 
-      // Render with post-processing
-      composer.render();
+      // Render scene
+      renderer.render(scene, camera);
       requestRef.current = requestAnimationFrame(animate);
     };
 

@@ -1,19 +1,43 @@
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { ProjectMesh } from './sceneSetup';
 
 // Create geometries for different project types
 export const createProjectGeometries = (): ProjectMesh[] => {
     const geometries: ProjectMesh[] = [];
     
+    // Custom shader material for glow effect
+    const glowMaterial = (color: number) => new THREE.ShaderMaterial({
+        uniforms: {
+            glowColor: { value: new THREE.Color(color) },
+            viewVector: { value: new THREE.Vector3() }
+        },
+        vertexShader: `
+            uniform vec3 viewVector;
+            varying float intensity;
+            void main() {
+                vec3 vNormal = normalize(normalMatrix * normal);
+                vec3 vNormel = normalize(normalMatrix * viewVector);
+                intensity = pow(0.6 - dot(vNormal, vNormel), 2.0);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 glowColor;
+            varying float intensity;
+            void main() {
+                vec3 glow = glowColor * intensity;
+                gl_FragColor = vec4(glow, 1.0);
+            }
+        `,
+        side: THREE.FrontSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+    });
+
     // VR Project - Icosahedron
     const vrGeometry = new THREE.IcosahedronGeometry(0.2);
     const vrMaterial = new THREE.MeshPhongMaterial({
         color: 0x00ff88,
-        emissive: 0x00ff88,
-        emissiveIntensity: 0,
         wireframe: true
     });
     const vrMesh = new THREE.Mesh(vrGeometry, vrMaterial) as ProjectMesh;
@@ -21,17 +45,13 @@ export const createProjectGeometries = (): ProjectMesh[] => {
     vrMesh.userData = { 
         type: 'project',
         projectId: 'vr',
-        originalEmissive: 0x00ff88,
-        baseEmissiveIntensity: 0,
-        targetEmissiveIntensity: 2
+        glowMaterial: glowMaterial(0x00ff88)
     };
 
     // MR Projects - Octahedrons
     const mrGeometry1 = new THREE.OctahedronGeometry(0.15);
     const mrMaterial1 = new THREE.MeshPhongMaterial({
         color: 0xff3366,
-        emissive: 0xff3366,
-        emissiveIntensity: 0,
         wireframe: true
     });
     const mrMesh1 = new THREE.Mesh(mrGeometry1, mrMaterial1) as ProjectMesh;
@@ -39,16 +59,12 @@ export const createProjectGeometries = (): ProjectMesh[] => {
     mrMesh1.userData = { 
         type: 'project',
         projectId: 'mr1',
-        originalEmissive: 0xff3366,
-        baseEmissiveIntensity: 0,
-        targetEmissiveIntensity: 2
+        glowMaterial: glowMaterial(0xff3366)
     };
 
     const mrGeometry2 = new THREE.OctahedronGeometry(0.15);
     const mrMaterial2 = new THREE.MeshPhongMaterial({
         color: 0x3366ff,
-        emissive: 0x3366ff,
-        emissiveIntensity: 0,
         wireframe: true
     });
     const mrMesh2 = new THREE.Mesh(mrGeometry2, mrMaterial2) as ProjectMesh;
@@ -56,17 +72,13 @@ export const createProjectGeometries = (): ProjectMesh[] => {
     mrMesh2.userData = { 
         type: 'project',
         projectId: 'mr2',
-        originalEmissive: 0x3366ff,
-        baseEmissiveIntensity: 0,
-        targetEmissiveIntensity: 2
+        glowMaterial: glowMaterial(0x3366ff)
     };
 
     // Game Project - Dodecahedron
     const gameGeometry = new THREE.DodecahedronGeometry(0.18);
     const gameMaterial = new THREE.MeshPhongMaterial({
         color: 0xffaa00,
-        emissive: 0xffaa00,
-        emissiveIntensity: 0,
         wireframe: true
     });
     const gameMesh = new THREE.Mesh(gameGeometry, gameMaterial) as ProjectMesh;
@@ -74,33 +86,11 @@ export const createProjectGeometries = (): ProjectMesh[] => {
     gameMesh.userData = { 
         type: 'project',
         projectId: 'game',
-        originalEmissive: 0xffaa00,
-        baseEmissiveIntensity: 0,
-        targetEmissiveIntensity: 2
+        glowMaterial: glowMaterial(0xffaa00)
     };
 
     geometries.push(vrMesh, mrMesh1, mrMesh2, gameMesh);
     return geometries;
-};
-
-// Setup post-processing for glow effect
-export const setupPostProcessing = (
-    scene: THREE.Scene,
-    camera: THREE.Camera,
-    renderer: THREE.WebGLRenderer
-): EffectComposer => {
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-
-    const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        1.5,  // bloom strength
-        0.4,  // bloom radius
-        0.85  // bloom threshold
-    );
-    composer.addPass(bloomPass);
-
-    return composer;
 };
 
 // Handle hover and click interactions
@@ -114,14 +104,15 @@ export const handleProjectInteractions = (
 
     // Reset all projects not being interacted with
     projects.forEach(project => {
-        if (!intersects.find((intersect: THREE.Intersection) => intersect.object === project)) {
-            project.material.emissiveIntensity = project.userData.baseEmissiveIntensity;
-        }
+        project.material = project.material as THREE.MeshPhongMaterial;
     });
 
     if (intersects.length > 0) {
         const project = intersects[0].object as ProjectMesh;
-        project.material.emissiveIntensity = 0.5; // Hover glow
+        // Apply glow effect
+        project.material = project.userData.glowMaterial;
+        project.userData.glowMaterial.uniforms.viewVector.value = 
+            new THREE.Vector3().subVectors(camera.position, project.position);
         return project;
     }
 
@@ -149,10 +140,12 @@ export const animateProjectSelection = (
         // Update camera position
         camera.position.lerpVectors(startPos, targetPos, easing);
         
-        // Update project glow
-        project.material.emissiveIntensity = 
-            project.userData.baseEmissiveIntensity + 
-            (project.userData.targetEmissiveIntensity - project.userData.baseEmissiveIntensity) * easing;
+        // Update glow intensity
+        if (project.userData.glowMaterial) {
+            project.material = project.userData.glowMaterial;
+            project.userData.glowMaterial.uniforms.viewVector.value = 
+                new THREE.Vector3().subVectors(camera.position, project.position);
+        }
 
         if (progress < 1) {
             requestAnimationFrame(animate);
