@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { RefObject, Dispatch, SetStateAction } from 'react';
+import { RefObject, Dispatch, SetStateAction, MutableRefObject } from 'react';
 import SimplexNoise from './SimplexNoise';
 
 interface VertexState {
@@ -12,7 +12,7 @@ type SphereWithStates = THREE.Mesh & {
     };
 };
 
-export const createVertexStateUpdater = (noiseRef: RefObject<SimplexNoise>) => {
+export const createVertexStateUpdater = (_noiseRef: RefObject<SimplexNoise>) => {
     return (sphere: SphereWithStates, pointer: { x: number; y: number }) => {
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2(pointer.x, pointer.y);
@@ -41,7 +41,7 @@ export const createVertexStateUpdater = (noiseRef: RefObject<SimplexNoise>) => {
 export const createEventHandlers = (
     sphere: SphereWithStates,
     camera: THREE.Camera,
-    lastPointerPosRef: RefObject<{ x: number; y: number } | null>,
+    lastPointerPosRef: MutableRefObject<{ x: number; y: number } | null>,
     setIsPointerDown: Dispatch<SetStateAction<boolean>>,
     updateVertexStates: (sphere: SphereWithStates, pointer: { x: number; y: number }) => void
 ) => {
@@ -68,7 +68,7 @@ export const createEventHandlers = (
         setIsPointerDown(false);
     };
 
-    const attachEventListeners = (domElement: HTMLCanvasElement, renderer: THREE.WebGLRenderer) => {
+    const attachEventListeners = (domElement: HTMLCanvasElement, _renderer: THREE.WebGLRenderer) => {
         domElement.addEventListener('pointerdown', handlePointerDown);
         domElement.addEventListener('pointermove', handlePointerMove);
         domElement.addEventListener('pointerup', handlePointerUp);
