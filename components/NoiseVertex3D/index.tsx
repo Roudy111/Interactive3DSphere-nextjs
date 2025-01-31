@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { createScene, createSphere, setupLights, ProjectMesh } from './sceneSetup';
+import { createScene, createSphere, setupLights, SphereMesh, ProjectMesh } from './sceneSetup';
 import { createEventHandlers, createVertexStateUpdater } from './eventHandlers';
 import { createProjectGeometries, setupPostProcessing, handleProjectInteractions, animateProjectSelection } from './projectGeometries';
 import SimplexNoise from './SimplexNoise';
@@ -16,17 +16,15 @@ export default function NoiseVertex3D({ className }: Props) {
   const requestRef = useRef<number>();
   const lastPointerPosRef = useRef<{ x: number; y: number } | null>(null);
   const noiseRef = useRef<SimplexNoise>(new SimplexNoise());
-  const [, setIsPointerDown] = useState(false);
+  const [isPointerDown, setIsPointerDown] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const container = containerRef.current;
-
     // Scene setup
     const { scene, camera, renderer } = createScene();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+    containerRef.current.appendChild(renderer.domElement);
 
     // Create and setup sphere
     const sphere = createSphere();
@@ -131,9 +129,9 @@ export default function NoiseVertex3D({ className }: Props) {
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
-      if (container && renderer.domElement) {
+      if (containerRef.current && renderer.domElement) {
         try {
-          container.removeChild(renderer.domElement);
+          containerRef.current.removeChild(renderer.domElement);
         } catch (e) {
           console.warn('Could not remove canvas element:', e);
         }

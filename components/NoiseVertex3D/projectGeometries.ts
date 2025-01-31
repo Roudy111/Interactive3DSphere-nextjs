@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import { ProjectMesh } from './sceneSetup';
+
+import { ProjectMesh, isProjectMesh } from './sceneSetup';
 
 // Create geometries for different project types
 export const createProjectGeometries = (): ProjectMesh[] => {
@@ -121,8 +122,10 @@ export const handleProjectInteractions = (
 
     if (intersects.length > 0) {
         const project = intersects[0].object as ProjectMesh;
-        project.material.emissiveIntensity = 0.5; // Hover glow
-        return project;
+        if (isProjectMesh(project)) {
+            project.material.emissiveIntensity = 0.5; // Hover glow
+            return project;
+        }
     }
 
     return null;

@@ -20,7 +20,7 @@ export default function ProjectError({
   return (
     <div className={styles.errorContainer}>
       <h1 className={styles.title}>Something went wrong</h1>
-      <p className={styles.description}>We couldn&apos;t load the project you&apos;re looking for.</p>
+      <p className={styles.description}>We couldn't load the project you're looking for.</p>
       <div className={styles.buttons}>
         <button className={styles.button} onClick={() => reset()}>Try again</button>
         <button className={styles.button} onClick={() => router.push('/')}>Return to Portfolio</button>
