@@ -8,7 +8,8 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": ["warn", {
       "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_"
+      "varsIgnorePattern": "^_",
+      "ignoreRestSiblings": true
     }],
     "react-hooks/exhaustive-deps": "warn",
     "react/no-unescaped-entities": "off",
@@ -17,8 +18,8 @@
     "@typescript-eslint/no-non-null-assertion": "off"
   },
   "settings": {
-    "next": {
-      "rootDir": "."
+    "react": {
+      "version": "detect"
     }
   },
   "ignorePatterns": [
@@ -27,5 +28,13 @@
     "out/",
     "build/",
     "dist/"
+  ],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      }
+    }
   ]
 }
