@@ -14,13 +14,15 @@ export const createVertexStateUpdater = (_noiseRef: RefObject<SimplexNoise>) => 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects([sphere as THREE.Object3D]);
 
-        if (intersects.length > 0) {
+        if (intersects.length > 0 && intersects[0].faceIndex !== undefined) {
             const faceIndex = intersects[0].faceIndex;
-            if (faceIndex !== undefined && sphere.geometry.index) {
+            const geometry = sphere.geometry;
+            
+            if (geometry.index) {
                 const vertexIndices = [
-                    sphere.geometry.index.getX(faceIndex * 3),
-                    sphere.geometry.index.getX(faceIndex * 3 + 1),
-                    sphere.geometry.index.getX(faceIndex * 3 + 2)
+                    geometry.index.getX(faceIndex * 3),
+                    geometry.index.getX(faceIndex * 3 + 1),
+                    geometry.index.getX(faceIndex * 3 + 2)
                 ];
 
                 vertexIndices.forEach(index => {
@@ -28,6 +30,17 @@ export const createVertexStateUpdater = (_noiseRef: RefObject<SimplexNoise>) => 
                         sphere.userData.vertexStates[index].isFrozen = true;
                     }
                 });
+
+                // Update position attribute to trigger rerender
+                const positions = geometry.attributes.position;
+                const array = positions.array;
+                const newPositions = new Float32Array(array.length);
+                newPositions.set(array);
+                
+                const positionAttribute = new THREE.Float32BufferAttribute(newPositions, 3);
+                geometry.setAttribute('position', positionAttribute);
+                geometry.attributes.position.needsUpdate = true;
+                geometry.computeVertexNormals();
             }
         }
     };

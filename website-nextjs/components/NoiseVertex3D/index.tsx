@@ -87,15 +87,15 @@ export default function NoiseVertex3D({ className }: Props) {
       // Create a new Float32Array for modified positions
       const newPositions = new Float32Array(array.length);
       
-      // Copy original positions
+      // Copy original positions and apply noise
       for (let i = 0; i < array.length; i += 3) {
         const vertexIndex = i / 3;
         
-        // Copy original x and y coordinates
+        // Copy x and y coordinates
         newPositions[i] = array[i];
         newPositions[i + 1] = array[i + 1];
         
-        // Calculate new z coordinate with noise
+        // Calculate z coordinate with noise
         const baseZ = array[i + 2];
         if (!sphere.userData.vertexStates[vertexIndex].isFrozen) {
           const noise = noiseRef.current.noise(
@@ -103,14 +103,15 @@ export default function NoiseVertex3D({ className }: Props) {
             array[i + 1] * 0.5 + time * 0.5,
             baseZ * 0.5
           );
-          newPositions[i + 2] = baseZ + noise * 0.01;
+          newPositions[i + 2] = baseZ + (noise * 0.01);
         } else {
           newPositions[i + 2] = baseZ;
         }
       }
 
       // Update geometry with new positions
-      sphere.geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+      const positionAttribute = new THREE.Float32BufferAttribute(newPositions, 3);
+      sphere.geometry.setAttribute('position', positionAttribute);
       sphere.geometry.attributes.position.needsUpdate = true;
       sphere.geometry.computeVertexNormals();
 
