@@ -11,7 +11,6 @@ declare module 'three' {
         index: BufferAttribute | null;
         setAttribute(name: string, attribute: BufferAttribute): this;
         getAttribute(name: string): BufferAttribute;
-        computeVertexNormals(): void;
         dispose(): void;
     }
 
@@ -239,10 +238,6 @@ declare module 'three' {
     export class FogExp2 {
         constructor();
     }
-}
-
-declare module 'react' {
-    export * from 'react';
 }
 
 declare module '*.glsl' {

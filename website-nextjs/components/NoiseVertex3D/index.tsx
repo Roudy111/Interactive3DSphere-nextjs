@@ -82,37 +82,33 @@ export default function NoiseVertex3D({ className }: Props) {
     const animate = () => {
       const time = Date.now() * 0.001;
       const positions = sphere.geometry.attributes.position;
+      const count = positions.count;
       const array = positions.array;
       
-      // Create a new Float32Array for modified positions
+      // Create a new array for modified positions
       const newPositions = new Float32Array(array.length);
-      
-      // Copy original positions
       for (let i = 0; i < array.length; i += 3) {
         const vertexIndex = i / 3;
         
-        // Copy original x and y coordinates
+        // Copy original positions
         newPositions[i] = array[i];
         newPositions[i + 1] = array[i + 1];
+        newPositions[i + 2] = array[i + 2];
         
-        // Calculate new z coordinate with noise
-        const baseZ = array[i + 2];
+        // Apply noise if vertex is not frozen
         if (!sphere.userData.vertexStates[vertexIndex].isFrozen) {
           const noise = noiseRef.current.noise(
-            array[i] * 0.5 + time * 0.5,
-            array[i + 1] * 0.5 + time * 0.5,
-            baseZ * 0.5
+            newPositions[i] * 0.5 + time * 0.5,
+            newPositions[i + 1] * 0.5 + time * 0.5,
+            newPositions[i + 2] * 0.5
           );
-          newPositions[i + 2] = baseZ + noise * 0.01;
-        } else {
-          newPositions[i + 2] = baseZ;
+          newPositions[i + 2] += noise * 0.01;
         }
       }
 
       // Update geometry with new positions
       sphere.geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
       sphere.geometry.attributes.position.needsUpdate = true;
-      sphere.geometry.computeVertexNormals();
 
       // Rotate project geometries
       projectGeometries.forEach((project, index) => {
