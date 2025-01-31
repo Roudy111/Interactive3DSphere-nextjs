@@ -1,0 +1,27 @@
+{
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "installCommand": "npm install --legacy-peer-deps --force && npm run postinstall",
+  "buildCommand": "npm run type-check && npm run build",
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NODE_ENV": "production",
+    "NPM_FLAGS": "--legacy-peer-deps --force",
+    "NEXT_SHARP_PATH": "./node_modules/sharp",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "NEXT_WEBPACK_USEPOLLING": "1",
+    "NEXT_PRIVATE_LOCAL_WEBPACK": "1"
+  },
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "NODE_OPTIONS": "--max-old-space-size=4096",
+      "NEXT_WEBPACK_USEPOLLING": "1",
+      "TS_NODE_PROJECT": "./tsconfig.json"
+    }
+  },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+  "installConfig": {
+    "followSymlinks": true
+  }
+}
