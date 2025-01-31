@@ -23,7 +23,9 @@ const nextConfig = {
         fs: false,
         path: false,
         crypto: false
-      }
+      },
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+      modules: ['node_modules']
     };
 
     // Add support for glsl/shader files
@@ -31,6 +33,27 @@ const nextConfig = {
       test: /\.(glsl|vs|fs|vert|frag)$/,
       type: 'asset/source'
     });
+
+    // Handle TypeScript files
+    const tsRule = config.module.rules.find(
+      rule => rule.test && rule.test.toString().includes('tsx|ts')
+    );
+
+    if (tsRule) {
+      tsRule.use = [
+        {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: process.env.NODE_ENV === 'development',
+            configFile: './tsconfig.json',
+            compilerOptions: {
+              module: 'esnext',
+              target: 'es5'
+            }
+          }
+        }
+      ];
+    }
 
     return config;
   },
@@ -100,4 +123,6 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
   keepAlive: true
-}
+};
+
+module.exports = nextConfig;
