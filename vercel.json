@@ -1,11 +1,10 @@
 {
   "framework": "nextjs",
   "regions": ["iad1"],
-  "installCommand": "yarn install --frozen-lockfile",
-  "buildCommand": "yarn build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "npm run build",
   "env": {
     "NEXT_TELEMETRY_DISABLED": "1",
-    "NODE_ENV": "production",
-    "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+    "NODE_ENV": "production"
   }
 }

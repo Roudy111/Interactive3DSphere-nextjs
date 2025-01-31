@@ -1,9 +1,7 @@
 {
-  "root": true,
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "next/core-web-vitals"
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
@@ -18,11 +16,6 @@
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/no-non-null-assertion": "off"
   },
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
-  },
   "settings": {
     "next": {
       "rootDir": "."
@@ -34,12 +27,5 @@
     "out/",
     "build/",
     "dist/"
-  ],
-  "parserOptions": {
-    "ecmaVersion": 2021,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  }
+  ]
 }
