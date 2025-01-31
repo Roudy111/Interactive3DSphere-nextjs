@@ -4,9 +4,9 @@ import { ProjectMesh } from './sceneSetup';
 export const createProjectGeometries = (): ProjectMesh[] => {
     const geometries: ProjectMesh[] = [];
     const projects = [
-        { id: '1', position: [-2, 1, 0] as [number, number, number] },
-        { id: '2', position: [2, 1, 0] as [number, number, number] },
-        { id: '3', position: [0, -2, 0] as [number, number, number] }
+        { id: '1', position: [-2, 1, 0] },
+        { id: '2', position: [2, 1, 0] },
+        { id: '3', position: [0, -2, 0] }
     ];
 
     projects.forEach(({ id, position }) => {
@@ -18,7 +18,7 @@ export const createProjectGeometries = (): ProjectMesh[] => {
         });
 
         const mesh = new THREE.Mesh(geometry, material) as ProjectMesh;
-        mesh.position.set(position[0], position[1], position[2]);
+        mesh.position.set(...position);
         mesh.userData = {
             type: 'project',
             projectId: id,

@@ -7,20 +7,16 @@ export const createVertexStateUpdater = (_noiseRef: RefObject<SimplexNoise>) => 
     return (sphere: SphereWithStates, pointer: { x: number; y: number }) => {
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2(pointer.x, pointer.y);
-        const camera = sphere.parent?.parent;
-        
-        if (!(camera instanceof THREE.Camera)) return;
-        
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects([sphere as THREE.Object3D]);
+        raycaster.setFromCamera(mouse, sphere.parent?.parent as THREE.Camera);
 
+        const intersects = raycaster.intersectObject(sphere);
         if (intersects.length > 0) {
             const faceIndex = intersects[0].faceIndex;
-            if (faceIndex !== undefined && sphere.geometry.index) {
+            if (faceIndex !== undefined) {
                 const vertexIndices = [
-                    sphere.geometry.index.getX(faceIndex * 3),
-                    sphere.geometry.index.getX(faceIndex * 3 + 1),
-                    sphere.geometry.index.getX(faceIndex * 3 + 2)
+                    sphere.geometry.index?.getX(faceIndex * 3),
+                    sphere.geometry.index?.getX(faceIndex * 3 + 1),
+                    sphere.geometry.index?.getX(faceIndex * 3 + 2)
                 ];
 
                 vertexIndices.forEach(index => {

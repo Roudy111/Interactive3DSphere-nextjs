@@ -21,8 +21,7 @@ const nextConfig = {
       fallback: {
         ...config.resolve.fallback,
         fs: false,
-        path: false,
-        crypto: false
+        path: false
       }
     };
 
@@ -87,17 +86,8 @@ const nextConfig = {
       'three/examples/jsm/{{path}}': {
         transform: 'three/examples/jsm/{{path}}'
       }
-    },
-    // Enable better module resolution
-    legacyBrowsers: false,
-    // Enable better CSS optimization
-    optimizePackageImports: ['three']
-  },
-
-  // Configure build optimization
-  swcMinify: true,
-  compress: true,
-  poweredByHeader: false,
-  generateEtags: true,
-  keepAlive: true
+    }
+  }
 }
+
+module.exports = nextConfig

@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
   "regions": ["iad1"],
-  "installCommand": "npm install --legacy-peer-deps --force && node scripts/setup-three.js",
+  "installCommand": "npm install --legacy-peer-deps --force && npm run postinstall",
   "buildCommand": "npm run type-check && npm run build",
   "env": {
     "NEXT_TELEMETRY_DISABLED": "1",
@@ -10,33 +10,18 @@
     "NEXT_SHARP_PATH": "./node_modules/sharp",
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "NEXT_WEBPACK_USEPOLLING": "1",
-    "NEXT_PRIVATE_LOCAL_WEBPACK": "1",
-    "NEXT_TELEMETRY_DEBUG": "1",
-    "NEXT_PRIVATE_STANDALONE": "true"
+    "NEXT_PRIVATE_LOCAL_WEBPACK": "1"
   },
   "build": {
     "env": {
       "NEXT_TELEMETRY_DISABLED": "1",
       "NODE_OPTIONS": "--max-old-space-size=4096",
       "NEXT_WEBPACK_USEPOLLING": "1",
-      "TS_NODE_PROJECT": "./tsconfig.json",
-      "NEXT_PRIVATE_LOCAL_WEBPACK": "1"
+      "TS_NODE_PROJECT": "./tsconfig.json"
     }
   },
   "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
   "installConfig": {
-    "followSymlinks": true,
-    "nodeVersion": "18.x"
-  },
-  "outputDirectory": ".next",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "installCommand": "npm install --legacy-peer-deps --force && node scripts/setup-three.js",
-        "buildCommand": "npm run type-check && npm run build"
-      }
-    }
-  ]
+    "followSymlinks": true
+  }
 }
