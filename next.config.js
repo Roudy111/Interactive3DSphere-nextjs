@@ -46,15 +46,6 @@ const nextConfig = {
       },
     ];
   },
-
-  // Disable React StrictMode for Three.js compatibility
-  reactStrictMode: false,
-
-  // Enable TypeScript
-  typescript: {
-    // Don't fail build on type errors during development
-    ignoreBuildErrors: process.env.NODE_ENV === 'development',
-  },
 }
 
 module.exports = nextConfig
