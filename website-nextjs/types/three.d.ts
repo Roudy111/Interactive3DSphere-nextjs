@@ -1,33 +1,6 @@
 declare module 'three' {
     export * from 'three/src/Three';
     
-    export class BufferGeometry {
-        constructor();
-        attributes: {
-            position: BufferAttribute;
-            normal?: BufferAttribute;
-            uv?: BufferAttribute;
-        };
-        index: BufferAttribute | null;
-        setAttribute(name: string, attribute: BufferAttribute): this;
-        getAttribute(name: string): BufferAttribute;
-        dispose(): void;
-    }
-
-    export class BufferAttribute {
-        constructor(array: ArrayLike<number>, itemSize: number, normalized?: boolean);
-        array: ArrayLike<number>;
-        count: number;
-        itemSize: number;
-        needsUpdate: boolean;
-        getX(index: number): number;
-        setX(index: number, x: number): this;
-    }
-
-    export class Float32BufferAttribute extends BufferAttribute {
-        constructor(array: ArrayLike<number>, itemSize: number, normalized?: boolean);
-    }
-
     export class Mesh<
         TGeometry extends BufferGeometry = BufferGeometry,
         TMaterial extends Material | Material[] = Material | Material[]
@@ -39,6 +12,19 @@ declare module 'three' {
         morphTargetDictionary?: { [key: string]: number };
         updateMorphTargets(): void;
         readonly isMesh: true;
+    }
+
+    export class PerspectiveCamera extends Camera {
+        constructor(fov?: number, aspect?: number, near?: number, far?: number);
+        aspect: number;
+        far: number;
+        filmGauge: number;
+        filmOffset: number;
+        focus: number;
+        fov: number;
+        near: number;
+        zoom: number;
+        updateProjectionMatrix(): void;
     }
 
     export class Vector3 {
@@ -110,19 +96,6 @@ declare module 'three' {
         projectionMatrix: Matrix4;
         projectionMatrixInverse: Matrix4;
         lookAt(target: Vector3): void;
-    }
-
-    export class PerspectiveCamera extends Camera {
-        constructor(fov?: number, aspect?: number, near?: number, far?: number);
-        aspect: number;
-        far: number;
-        filmGauge: number;
-        filmOffset: number;
-        focus: number;
-        fov: number;
-        near: number;
-        zoom: number;
-        updateProjectionMatrix(): void;
     }
 
     export class AmbientLight extends Light {
@@ -201,6 +174,24 @@ declare module 'three' {
         userData: any;
         add(...object: Object3D[]): this;
         remove(...object: Object3D[]): this;
+    }
+
+    export class BufferGeometry {
+        constructor();
+        attributes: {
+            position: BufferAttribute;
+            normal?: BufferAttribute;
+            uv?: BufferAttribute;
+        };
+        index: BufferAttribute | null;
+    }
+
+    export class BufferAttribute {
+        constructor(array: ArrayLike<number>, itemSize: number, normalized?: boolean);
+        count: number;
+        array: ArrayLike<number>;
+        itemSize: number;
+        getX(index: number): number;
     }
 
     export class Material {

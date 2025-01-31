@@ -12,9 +12,7 @@
     "NEXT_WEBPACK_USEPOLLING": "1",
     "NEXT_PRIVATE_LOCAL_WEBPACK": "1",
     "NEXT_TELEMETRY_DEBUG": "1",
-    "NEXT_PRIVATE_STANDALONE": "true",
-    "TS_NODE_PROJECT": "./tsconfig.json",
-    "NEXT_MINIMAL": "1"
+    "NEXT_PRIVATE_STANDALONE": "true"
   },
   "build": {
     "env": {
@@ -28,8 +26,7 @@
   "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
   "installConfig": {
     "followSymlinks": true,
-    "nodeVersion": "18.x",
-    "packageManager": "npm"
+    "nodeVersion": "18.x"
   },
   "outputDirectory": ".next",
   "builds": [
@@ -38,21 +35,8 @@
       "use": "@vercel/next",
       "config": {
         "installCommand": "npm install --legacy-peer-deps --force && node scripts/setup-three.js",
-        "buildCommand": "npm run type-check && npm run build",
-        "nodeVersion": "18.x",
-        "typescript": {
-          "ignoreBuildErrors": false
-        }
+        "buildCommand": "npm run type-check && npm run build"
       }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "headers": {
-        "x-typescript-types": "true"
-      },
-      "continue": true
     }
   ]
 }

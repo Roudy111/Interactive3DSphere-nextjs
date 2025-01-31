@@ -38,10 +38,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "verbatimModuleSyntax": false,
-    "allowImportingTsExtensions": true,
-    "downlevelIteration": true
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "next-env.d.ts",
