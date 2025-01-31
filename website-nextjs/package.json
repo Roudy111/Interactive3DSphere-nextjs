@@ -56,5 +56,11 @@
   },
   "engines": {
     "node": ">=18.17.0"
-  }
+  },
+  "moduleResolution": "node",
+  "types": ["node", "react", "react-dom", "three"],
+  "typeRoots": [
+    "./node_modules/@types",
+    "./types"
+  ]
 }
