@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './styles.module.css';
 
 const projectData = {
   vr: {
@@ -36,12 +35,49 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
   if (!project) return null;
 
   return (
-    <main className={styles.projectPage}>
-      <h1 className={styles.title}>{project.title}</h1>
-      <p className={styles.description}>{project.description}</p>
-      <button className={styles.button} onClick={() => router.push('/')}>
-        Back to Portfolio
-      </button>
+    <main className="project-page">
+      <h1>{project.title}</h1>
+      <p>{project.description}</p>
+      <button onClick={() => router.push('/')}>Back to Portfolio</button>
+
+      <style jsx>{`
+        .project-page {
+          min-height: 100vh;
+          padding: 2rem;
+          background: #1a1a1a;
+          color: white;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        h1 {
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 1.2rem;
+          line-height: 1.6;
+          max-width: 800px;
+        }
+
+        button {
+          margin-top: 2rem;
+          padding: 0.8rem 1.6rem;
+          background: transparent;
+          border: 2px solid white;
+          color: white;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        button:hover {
+          background: white;
+          color: #1a1a1a;
+        }
+      `}</style>
     </main>
   );
 }
